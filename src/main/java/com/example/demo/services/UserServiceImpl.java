@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
+import com.example.demo.model.Task;
 import com.example.demo.model.User;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,5 +43,11 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId).get();
         userRepository.delete(user);
+    }
+
+    @Override
+    public List<Task> getUserTasks(Long userID) {
+        User user = userRepository.findById(userID).get();
+        return user.getTasks();
     }
 }

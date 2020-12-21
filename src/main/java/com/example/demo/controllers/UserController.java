@@ -1,8 +1,11 @@
 package com.example.demo.controllers;
 
+import com.example.demo.model.Task;
 import com.example.demo.model.User;
 import com.example.demo.services.UserService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -32,5 +35,10 @@ public class UserController {
     @DeleteMapping("/user/{userId}")
     public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/user/{userId}/tasks")
+    public List<Task> getAllTasks(@PathVariable Long userId) {
+        return userService.getUserTasks(userId);
     }
 }
