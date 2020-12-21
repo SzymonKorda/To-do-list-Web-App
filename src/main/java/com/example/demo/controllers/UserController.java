@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.model.Task;
 import com.example.demo.model.User;
 import com.example.demo.services.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public void createFilm(@RequestBody User user) {
+    @PreAuthorize("hasAuthority('student:write')")
+    public void createUser(@RequestBody User user) {
         userService.newUser(user);
     }
 
     @GetMapping("/user/{userId}")
-    public User getFilm(@PathVariable long userId) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
+    public User getUser(@PathVariable long userId) {
         return userService.getUser(userId);
     }
 
@@ -33,6 +36,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{userId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
     }
