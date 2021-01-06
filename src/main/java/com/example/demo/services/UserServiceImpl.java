@@ -20,6 +20,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void newUser(User userRequest) {
         User user = new User();
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(userRequest.getPassword());
+        user.setEmail(userRequest.getEmail());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         userRepository.save(user);
@@ -32,10 +35,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(Long userId, User userResponse) {
+    public void updateUser(Long userId, User userRequest) {
         User user = userRepository.findById(userId).get();
-        user.setFirstName(userResponse.getFirstName());
-        user.setLastName(userResponse.getLastName());
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(userRequest.getPassword());
+        user.setEmail(userRequest.getEmail());
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
         userRepository.save(user);
     }
 

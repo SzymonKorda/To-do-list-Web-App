@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
-//todo: change field names from reserved MySQL keywords
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -13,21 +12,20 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String namer;
+    @Column(name = "task_name")
+    private String name;
 
-    @Column
-    private String describer;
+    @Column(name = "task_describe")
+    private String describe;
 
-    @Column
+    @Column(name = "task_date")
     @Temporal(TemporalType.TIME)
-    private Date dater;
-
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User userr;
+    private User user;
 
     public Task() {
     }
@@ -40,35 +38,35 @@ public class Task {
         this.id = id;
     }
 
-    public String getNamer() {
-        return namer;
+    public String getName() {
+        return name;
     }
 
-    public void setNamer(String name) {
-        this.namer = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescriber() {
-        return describer;
+    public String getDescribe() {
+        return describe;
     }
 
-    public void setDescriber(String describe) {
-        this.describer = describe;
+    public void setDescribe(String describe) {
+        this.describe = describe;
     }
 
-    public Date getDater() {
-        return dater;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDater(Date dater) {
-        this.dater = dater;
+    public void setDate(Date dater) {
+        this.date = dater;
     }
 
     public User getUser() {
-        return userr;
+        return user;
     }
 
     public void setUser(User user) {
-        this.userr = user;
+        this.user = user;
     }
 }

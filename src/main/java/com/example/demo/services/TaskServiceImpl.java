@@ -24,9 +24,9 @@ public class TaskServiceImpl implements TaskService{
         userId = 1L;
 
         Task task = new Task();
-        task.setNamer(taskRequest.getNamer());
-        task.setDescriber(taskRequest.getDescriber());
-        task.setDater(new Date());
+        task.setName(taskRequest.getName());
+        task.setDescribe(taskRequest.getDescribe());
+        task.setDate(new Date());
 
         User user = userRepository.findById(userId).get();
         task.setUser(user);
@@ -43,9 +43,9 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public void updateTask(Long taskId, Task taskRequest) {
         Task task = taskRepository.findById(taskId).get();
-        task.setNamer(taskRequest.getNamer());
-        task.setDescriber(taskRequest.getDescriber());
-        task.setDater(new Date());
+        task.setName(taskRequest.getName());
+        task.setDescribe(taskRequest.getDescribe());
+        task.setDate(new Date());
 
         taskRepository.save(task);
     }
