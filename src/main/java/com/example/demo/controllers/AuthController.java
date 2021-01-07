@@ -3,12 +3,15 @@ package com.example.demo.controllers;
 import com.example.demo.model.ERole;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.SignupRequest;
 import com.example.demo.payload.response.ApiResponse;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +22,19 @@ import java.util.List;
 
 @RestController
 public class AuthController {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     RoleRepository roleRepository;
+
+    public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication =
+    }
+
 
     @PostMapping("/auth/signup")
     public ResponseEntity registerUser(@Valid @RequestBody SignupRequest signupRequest) {
@@ -43,7 +53,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
-        user.setPassword(signupRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 
         List<String> strRoles = signupRequest.getRoles();
         List<Role> roles = new ArrayList<>();
@@ -71,4 +81,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new ApiResponse("User registered successfully!"));
     }
+
 }
