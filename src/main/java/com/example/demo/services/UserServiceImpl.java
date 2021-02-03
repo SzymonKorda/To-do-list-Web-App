@@ -2,13 +2,16 @@ package com.example.demo.services;
 
 import com.example.demo.exceptions.RoleNotFoundException;
 import com.example.demo.exceptions.UserExistsException;
+import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.model.ERole;
 import com.example.demo.model.Role;
 import com.example.demo.model.Task;
 import com.example.demo.model.User;
 import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.RegisterRequest;
+import com.example.demo.payload.request.UserUpdateRequest;
 import com.example.demo.payload.response.JwtResponse;
+import com.example.demo.payload.response.UserResponse;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.JwtUtils;
@@ -16,6 +19,7 @@ import com.example.demo.security.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -111,25 +115,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(Long userId) {
-        User user = userRepository.findById(userId).get();
-        return user;
+    public UserResponse getUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        UserResponse userResponse = new UserResponse(
+                user.getUsername(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName()
+        );
+        return userResponse;
     }
 
     @Override
-    public void updateUser(Long userId, User userRequest) {
-        User user = userRepository.findById(userId).get();
-        user.setUsername(userRequest.getUsername());
-        user.setPassword(userRequest.getPassword());
-        user.setEmail(userRequest.getEmail());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
+    public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+        if (userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+            throw new UserExistsException("Email is already taken");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+
+        if(userUpdateRequest.getEmail() != null) {
+            user.setEmail(userUpdateRequest.getEmail());
+        }
+        if(userUpdateRequest.getFirstName() != null) {
+            user.setFirstName(userUpdateRequest.getFirstName());
+        }
+        if(userUpdateRequest.getLastName() != null) {
+            user.setLastName(userUpdateRequest.getLastName());
+        }
+
         userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         userRepository.delete(user);
     }
 

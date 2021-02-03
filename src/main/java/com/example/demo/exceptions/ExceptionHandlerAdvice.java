@@ -14,8 +14,16 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity(new ApiResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity roleNotFoundExceptionHandler(RoleNotFoundException ex) {
         return new ResponseEntity(new ApiResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity userNotFoundExceptionHandler(UserNotFoundException ex) {
+        return new ResponseEntity(new ApiResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+
+
 }
