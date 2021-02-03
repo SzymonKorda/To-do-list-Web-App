@@ -6,8 +6,11 @@ import com.example.demo.model.User;
 import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.SignupRequest;
 import com.example.demo.payload.response.ApiResponse;
+import com.example.demo.payload.response.JwtResponse;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.security.JwtUtils;
+import com.example.demo.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class AuthController {
     @Autowired
@@ -38,12 +41,29 @@ public class AuthController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    JwtUtils jwtUtils;
+
     @PostMapping("/auth/signin")
     public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        return ResponseEntity.ok(new ApiResponse("Login successfully!"));
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new JwtResponse(
+                "Login successfully!",
+                jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles
+        ));
     }
 
 

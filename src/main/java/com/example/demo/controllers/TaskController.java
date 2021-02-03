@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.model.Task;
 import com.example.demo.services.TaskService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class TaskController {
     }
 
     @PostMapping("/user/{userId}/task")
+    @PreAuthorize("hasRole('USER')")
     public void newTask(@PathVariable Long userId, @RequestBody Task taskRequest) {
         taskService.newTask(taskRequest, userId);
     }
