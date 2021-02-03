@@ -19,7 +19,7 @@ public class TaskController {
         return taskService.getTask(taskId);
     }
 
-    @PostMapping("/user/{userId}/task")
+    @PostMapping("/task")
     @PreAuthorize("hasRole('USER')")
     public void newTask(@PathVariable Long userId, @RequestBody Task taskRequest) {
         taskService.newTask(taskRequest, userId);

@@ -2,9 +2,14 @@ package com.example.demo.controllers;
 
 import com.example.demo.model.Task;
 import com.example.demo.model.User;
+import com.example.demo.payload.request.LoginRequest;
+import com.example.demo.payload.request.RegisterRequest;
+import com.example.demo.payload.response.ApiResponse;
 import com.example.demo.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -17,13 +22,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user")
-    public void createFilm(@RequestBody User user) {
-        userService.newUser(user);
+    @PostMapping("/user/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        userService.createUser(registerRequest);
+        return ResponseEntity.ok(new ApiResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
 
     @GetMapping("/user/{userId}")
-    public User getFilm(@PathVariable long userId) {
+    public User getUser(@PathVariable long userId) {
         return userService.getUser(userId);
     }
 
