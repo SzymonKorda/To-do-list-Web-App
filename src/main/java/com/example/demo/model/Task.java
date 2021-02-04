@@ -1,11 +1,18 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Clob;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 @Entity
 @Table(name = "tasks")
+@EntityListeners(AuditingEntityListener.class)
 public class Task {
 
     @Id
@@ -15,12 +22,19 @@ public class Task {
     @Column(name = "task_name")
     private String name;
 
-    @Column(name = "task_describe")
+    @Column(name = "task_description")
     private String describe;
 
-    @Column(name = "task_date")
-    @Temporal(TemporalType.TIME)
-    private Date date;
+//  todo: fix date 1 hour behind in JSON
+    @CreatedDate
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @Column(name = "achieved_date")
+    private Date achievedDate;
+
+    @Column(name = "task_status")
+    private boolean status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,6 +42,14 @@ public class Task {
     private User user;
 
     public Task() {
+    }
+
+    public Task(String name, String describe, Date achievedDate, boolean status, User user) {
+        this.name = name;
+        this.describe = describe;
+        this.achievedDate = achievedDate;
+        this.status = status;
+        this.user = user;
     }
 
     public Long getId() {
@@ -54,12 +76,28 @@ public class Task {
         this.describe = describe;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setDate(Date dater) {
-        this.date = dater;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getAchievedDate() {
+        return achievedDate;
+    }
+
+    public void setAchievedDate(Date achievedDate) {
+        this.achievedDate = achievedDate;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public User getUser() {

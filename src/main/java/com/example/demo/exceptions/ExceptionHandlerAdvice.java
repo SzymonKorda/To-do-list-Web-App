@@ -24,6 +24,9 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity(new ApiResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity taskNotFoundExceptionHandler(TaskNotFoundException ex) {
+        return new ResponseEntity(new ApiResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
 
 }
