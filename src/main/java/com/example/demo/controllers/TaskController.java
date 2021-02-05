@@ -1,7 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.model.Task;
 import com.example.demo.payload.request.TaskRequest;
+import com.example.demo.payload.request.TaskUpdateRequest;
 import com.example.demo.payload.response.ApiResponse;
 import com.example.demo.payload.response.TaskResponse;
 import com.example.demo.services.TaskService;
@@ -30,14 +30,18 @@ public class TaskController {
         taskService.createTask(taskRequest, userId);
         return ResponseEntity.ok(new ApiResponse("Task created successfully!"));
     }
-//
-//    @PostMapping("/task/{taskId}")
-//    public void updateTask(@PathVariable Long taskId, @RequestBody Task taskRequest) {
-//        taskService.updateTask(taskId, taskRequest);
-//    }
-//
-//    @DeleteMapping("/task/{taskId}")
-//    public void deleteTask(@PathVariable Long taskId) {
-//        taskService.deleteTask(taskId);
-//    }
+
+    @PostMapping("/task/{taskId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateRequest taskUpdateRequest) {
+        taskService.updateTask(taskId, taskUpdateRequest);
+        return ResponseEntity.ok(new ApiResponse("Task updated successfully!"));
+    }
+
+    @DeleteMapping("/task/{taskId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.ok(new ApiResponse("Task deleted successfully!"));
+    }
 }
