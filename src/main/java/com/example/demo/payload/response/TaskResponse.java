@@ -1,10 +1,13 @@
 package com.example.demo.payload.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class TaskResponse {
     private String name;
     private String describe;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
     private Date achievedDate;
     private boolean status;
