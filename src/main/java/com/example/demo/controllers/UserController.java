@@ -1,11 +1,10 @@
 package com.example.demo.controllers;
 
-import com.example.demo.model.Task;
-import com.example.demo.model.User;
 import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.RegisterRequest;
 import com.example.demo.payload.request.UserUpdateRequest;
 import com.example.demo.payload.response.ApiResponse;
+import com.example.demo.payload.response.TaskResponse;
 import com.example.demo.payload.response.UserResponse;
 import com.example.demo.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/tasks")
-    public List<Task> getAllTasks(@PathVariable Long userId) {
+    public List<TaskResponse> getUserTasks(@PathVariable Long userId) {
         return userService.getUserTasks(userId);
     }
 }

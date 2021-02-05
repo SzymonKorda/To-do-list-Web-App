@@ -6,6 +6,7 @@ import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.RegisterRequest;
 import com.example.demo.payload.request.UserUpdateRequest;
 import com.example.demo.payload.response.JwtResponse;
+import com.example.demo.payload.response.TaskResponse;
 import com.example.demo.payload.response.UserResponse;
 
 import java.util.List;
@@ -17,6 +18,5 @@ public interface UserService {
     UserResponse getUser(Long userId);
     void updateUser(Long userId, UserUpdateRequest userUpdateRequest);
     void deleteUser(Long userId);
-
-    List<Task> getUserTasks(Long userID);
+    List<TaskResponse> getUserTasks(Long userId);
 }

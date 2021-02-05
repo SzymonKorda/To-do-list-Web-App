@@ -11,6 +11,7 @@ import com.example.demo.payload.request.LoginRequest;
 import com.example.demo.payload.request.RegisterRequest;
 import com.example.demo.payload.request.UserUpdateRequest;
 import com.example.demo.payload.response.JwtResponse;
+import com.example.demo.payload.response.TaskResponse;
 import com.example.demo.payload.response.UserResponse;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
@@ -158,8 +159,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Task> getUserTasks(Long userID) {
-        User user = userRepository.findById(userID).get();
-        return user.getTasks();
+    public List<TaskResponse> getUserTasks(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+
+        return user.getTasks().stream()
+                .map(task -> new TaskResponse(
+                        task.getName(),
+                        task.getDescribe(),
+                        task.getCreateDate(),
+                        task.getAchievedDate(),
+                        task.isStatus()
+                ))
+                .collect(Collectors.toList());
     }
 }
